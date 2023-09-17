@@ -1,5 +1,9 @@
 import {test, Browser, Page, expect} from '@playwright/test';
 
+(async () => {
+    let browser: Browser;
+    let page: Page;
+
     test.describe('Navegación en www.freerangetester.com', () => {
 
         const secciones = [
@@ -30,3 +34,4 @@ import {test, Browser, Page, expect} from '@playwright/test';
        }
 
     });
+})();
