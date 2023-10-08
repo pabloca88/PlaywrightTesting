@@ -12,9 +12,10 @@ import {test, Browser, Page, expect} from '@playwright/test';
                 await page.goto('https://thefreerangetester.github.io/sandbox-automation-testing/');   
             })
 
-            await test.step('Puedo hacer click en el botón ID dinámico',async () => {
+            await test.step('Puedo hacer click en el botón ID dinámico y validar el mensaje que aparece',async () => {
                 await page.getByRole('button', { name: 'Hacé click para generar un ID dinámico y mostrar el elemento oculto', exact: true})
                 .click(); // or crear una constante y hacerle click const botonIdDinamico = xx, botonIdDinámico.click();
+                await expect(page.getByText('OMG, aparezco después de 3 segundos de haber hecho click en el botón 👻.')).toBeVisible();
                 
             })
         })
@@ -25,20 +26,28 @@ import {test, Browser, Page, expect} from '@playwright/test';
             })
 
             await test.step('Puedo ingresar texto en el campo Un Aburrido Texto', async () => {
+                await expect(page.getByPlaceholder('Ingresá texto'),'El Campo no se puede editar').toBeEditable();
                 await page.getByPlaceholder('Ingresá texto').fill(textoAEscribir); // como opción se puede usar .type(); como tipear con el teclado
-
+                await expect(page.getByPlaceholder('Ingresá texto'),'El campo no contiene un valor').toHaveValue(textoAEscribir);
             })
         })
 
-        test('Puedo seleccionar Checkboxes', async ({ page }) => {
+        test('Puedo seleccionar y desselecionar Checkboxes', async ({ page }) => {
 
             await test.step('Dado que navego al Sandbox de Automation de Free Range Testers', async () => {
                 await page.goto('https://thefreerangetester.github.io/sandbox-automation-testing/');
             })
 
             await test.step('Puedo seleccionar el checkbox para Pasta', async () => {
-                await page.getByLabel('Pasta 🍝').check(); // repetir dos veces check no desselecciona, se usa uncheck(); 
-            })    
+                await page.getByLabel('Pasta 🍝').check(); // repetir dos veces check no desselecciona, se usa uncheck();
+                await expect(page.getByLabel('Pasta 🍝'), 'El checkbox no estaba seleccionado').toBeChecked();
+            })
+            
+            await test.step('Puedo deseleccionar el checlbox para Pasta', async () => {
+                await page.getByLabel('Pasta 🍝').uncheck();
+                await expect(page.getByLabel('Pasta 🍝'), 'El checkbox no estaba desseleccionado').not.toBeChecked();
+            })
+            
         })
 
         test('Puedo seleccionar Radio Buttons', async ({ page }) => {
@@ -60,7 +69,21 @@ import {test, Browser, Page, expect} from '@playwright/test';
 
             await test.step('Puedo seleccionar un deporte del Dropdown', async () => {
                 await page.getByLabel('Dropdown').selectOption('Fútbol'); // dropdown de tipo <select>
-            })    
+            })
+            
+            await test.step('Valid que la lista de dropdown contiene los deportes esperados', async () => {
+                const deportes = ['Fútbol', 'Tennis', 'Basketball', 'Bochas']
+
+                for (let opcion of deportes) {
+                    const element = await page.$(`select#formBasicSelect > option:is(:text("${opcion}"))`);
+                    if (element) {
+                        console.log(`La opción '${opcion}' está presente. `);
+                    } else {
+                        throw new Error(`La opción '${opcion}' no está presente. `);
+                    }
+                }
+            })
+            
         })
 
         test('Puedo seleccionar un día del dropdown Días de la Semana', async ({ page }) => {
