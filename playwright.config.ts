@@ -24,28 +24,66 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://127.0.0.1:3000',
+    baseURL: 'https://thefreerangetester.github.io/sandbox-automation-testing/',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    trace: 'on',
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      name: 'Computer',
+      testMatch: "/AutomationSandbox.spec.ts",
+      use: {...devices['Desktop Chrome']},
     },
 
     {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      name: 'iPhone',
+      testMatch: "/AutomationSandbox.spec.ts",
+      use: {...devices['iPhone 13']},
     },
 
     {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      name: 'Android',
+      testMatch: "/AutomationSandbox.spec.ts",
+      use: {...devices['Pixel 5']},
     },
+
+    {
+      name: 'iPad',
+      testMatch: "/AutomationSandbox.spec.ts",
+      use: {...devices['iPad Pro 11']},
+    },
+
+    {
+      name: 'API Tests',
+      testMatch: '/APITests/**/*',
+      use: {
+        baseURL: 'https://api.github.com',
+        extraHTTPHeaders: { 
+          'Accept': 'application/vnd.github.v3+json',
+          'Authorization' : `token ${process.env.API_TOKEN}`,
+        }
+     }
+    },
+
+    //Projects running on different browsers
+    
+    // {
+    //   name: 'chromium',
+    //   use: { ...devices['Desktop Chrome'] },
+    // },
+
+    // {
+    //   name: 'firefox',
+    //   use: { ...devices['Desktop Firefox'] },
+    // },
+
+    // {
+    //   name: 'webkit',
+    //   use: { ...devices['Desktop Safari'] },
+    // },
 
     /* Test against mobile viewports. */
     // {

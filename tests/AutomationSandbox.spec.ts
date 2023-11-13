@@ -1,4 +1,5 @@
 import {test, Browser, Page, expect} from '@playwright/test';
+import { SandboxPage } from './Pages/SandboxPage';
 
 (async () => {
     let browser: Browser;
@@ -9,7 +10,7 @@ import {test, Browser, Page, expect} from '@playwright/test';
         test('Click en Boton ID Dinámico', async ({ page }) => {
 
             await test.step('Dado que navego al SandBox de Automation de Free Range Tester ', async () => {
-                await page.goto('https://thefreerangetester.github.io/sandbox-automation-testing/');   
+                await page.goto('');   
             })
 
             await test.step('Puedo hacer click en el botón ID dinámico y validar el mensaje que aparece',async () => {
@@ -20,9 +21,9 @@ import {test, Browser, Page, expect} from '@playwright/test';
             })
         })
 
-        test('Lleno un campo de texto Automation SandBox', async ({ page }) => {
+        test('Lleno un campo de texto Automation @SandBox', async ({ page }) => {
             await test.step('Dado que navego al SandBox de Automation de Free Range Tester ', async () => {
-                await page.goto('https://thefreerangetester.github.io/sandbox-automation-testing/');   
+                await page.goto('');   
             })
 
             await test.step('Puedo ingresar texto en el campo Un Aburrido Texto', async () => {
@@ -32,20 +33,27 @@ import {test, Browser, Page, expect} from '@playwright/test';
             })
         })
 
-        test('Puedo seleccionar y desselecionar Checkboxes', async ({ page }) => {
+        //test MODELADO CON POM
+        test('Puedo seleccionar y desselecionar Checkboxes en el @SandBox', async ({ page }) => {
 
             await test.step('Dado que navego al Sandbox de Automation de Free Range Testers', async () => {
-                await page.goto('https://thefreerangetester.github.io/sandbox-automation-testing/');
+                await page.goto('');
             })
 
             await test.step('Puedo seleccionar el checkbox para Pasta', async () => {
-                await page.getByLabel('Pasta 🍝').check(); // repetir dos veces check no desselecciona, se usa uncheck();
-                await expect(page.getByLabel('Pasta 🍝'), 'El checkbox no estaba seleccionado').toBeChecked();
+                const sandbox = new SandboxPage(page);
+                //await page.getByLabel('Pasta 🍝').check(); // repetir dos veces check no desselecciona, se usa uncheck();
+                await sandbox.checkPasta();
+
+                await expect(sandbox.pastaCheckbox, 'El checkbox no estaba seleccionado').toBeChecked();
             })
             
             await test.step('Puedo deseleccionar el checlbox para Pasta', async () => {
-                await page.getByLabel('Pasta 🍝').uncheck();
-                await expect(page.getByLabel('Pasta 🍝'), 'El checkbox no estaba desseleccionado').not.toBeChecked();
+                const sandbox = new SandboxPage(page);
+                //await page.getByLabel('Pasta 🍝').uncheck();
+                await sandbox.uncheckPasta();
+
+                await expect(sandbox.pastaCheckbox, 'El checkbox no estaba desseleccionado').not.toBeChecked();
             })
             
         })
@@ -53,18 +61,18 @@ import {test, Browser, Page, expect} from '@playwright/test';
         test('Puedo seleccionar Radio Buttons', async ({ page }) => {
 
             await test.step('Dado que navego al Sandbox de Automation de Free Range Testers', async () => {
-                await page.goto('https://thefreerangetester.github.io/sandbox-automation-testing/');
+                await page.goto('');
             })
 
             await test.step('Puedo seleccionar el Radio Button para No', async () => {
-                await page.getByLabel('No').check(); // repetir dos veces check no desselecciona, se usa uncheck(); 
+                await page.getByLabel('No').check(); //repetir dos veces check no desselecciona, se usa uncheck(); 
             })    
         })
 
         test('Puedo seleccionar un item del Dropdown', async ({ page }) => {
 
             await test.step('Dado que navego al Sandbox de Automation de Free Range Testers', async () => {
-                await page.goto('https://thefreerangetester.github.io/sandbox-automation-testing/');
+                await page.goto('');
             })
 
             await test.step('Puedo seleccionar un deporte del Dropdown', async () => {
@@ -89,7 +97,7 @@ import {test, Browser, Page, expect} from '@playwright/test';
         test('Puedo seleccionar un día del dropdown Días de la Semana', async ({ page }) => {
 
             await test.step('Dado que navego al Sandbox de Automation de Free Range Testers', async () => {
-                await page.goto('https://thefreerangetester.github.io/sandbox-automation-testing/');
+                await page.goto('');
             })
 
             await test.step('Selecciono un día de la semana del dropdown', async () => {
@@ -102,7 +110,7 @@ import {test, Browser, Page, expect} from '@playwright/test';
         test.skip('Puedo subir archivos a Automation Sandbox', async ({ page }) => { 
 
             await test.step('Dado que navego al Sandbox de Automation de Free Range Testers', async () => {
-                await page.goto('https://thefreerangetester.github.io/sandbox-automation-testing/');
+                await page.goto('');
             })
 
             await test.step('Agrego archivos para ser subidos', async () => {
@@ -118,7 +126,7 @@ import {test, Browser, Page, expect} from '@playwright/test';
         test.skip('Puedo hacer un drag and drop de elementos en  Automation Sandbox', async ({ page }) => { 
 
             await test.step('Dado que navego al Sandbox de Automation de Free Range Testers', async () => {
-                await page.goto('https://thefreerangetester.github.io/sandbox-automation-testing/');
+                await page.goto('');
             })
 
             await test.step('Agrego archivos para ser subidos', async () => {
@@ -126,9 +134,82 @@ import {test, Browser, Page, expect} from '@playwright/test';
                 .dragTo(page.getByTestId('Dragto'));
             })    
         })
+
+        test('Valido la columna Nombres de la tabla estática', async ({ page }) => {
+            await test.step('Dado que navego al Sandbox de Automation de Free Range Testers', async () => {
+                await page.goto('');
+            })
+
+            await test.step('Puedo validar los elementos para la columna Nombre de la tabla estática', async () => {
+                const valoresColumnaNombres = await page.$$eval('h2:has-text("Tabla estática") + table tbody tr td:nth-child(2)', elements => elements.map(element => element.textContent));
+                const nombresEsperados = ['Messi', 'Ronaldo',  'Mbappe'];
+
+                // crear un screenshot para agregar al reporte
+                await test.info().attach('screenshot',{
+                    body: await page.screenshot(),
+                    contentType: 'image/png',
+                })
+
+                expect(valoresColumnaNombres).toEqual(nombresEsperados);
+            })
+        })
+        test('Valido que todos los valores cambian en la tabla dinámica luego de un reload', async ({ page }) => {
+            await test.step('Dado que navego al Sandbox de Automation Free Range Testers', async () => {
+                await page.goto('');
+            })
+
+            await test.step('Valido que los valores cambiaron al hacer un reload a la web', async () => {
+                //Creamos un arreglo con todos los valores de la tabla dinámica
+                const valoresTablaDinamica = await page.$$eval('h2:has-text("Tabla dinámica") + table tbody tr td',elements => elements.map(element => element.textContent));
+                console.log(valoresTablaDinamica);
+
+                //Reload de la página para que cambien los valores de las tablas dinámicas
+                await page.reload();
+
+                //Creamos un segundo arreglo con todos los valores de la tabla dinámica despues de hacer reload de la página
+                const valoresPostReload = await page.$$eval('h2:has-text("Tabla dinámica") + table tbody tr td',elements => elements.map(element => element.textContent));
+                console.log(valoresPostReload);
+
+                //Validamos que todos los valores se modificaron para cada celda
+                expect(valoresTablaDinamica).not.toEqual(valoresPostReload);
+            })
+        })
+
+        test('Ejemplo de Soft Assertions', async ({ page }) => {
+            await test.step('Dado que navego al Sandbox de Automation de Free Range Testers', async () => {
+                await page.goto('');
+            })
+
+            await test.step('Valido que los elementos de los checkboxes no sean los correctos', async () => {
+                await expect.soft(page.getByText('Pizzaa 🍕'),'No se encontró el elemento Pizza 🍕').toBeVisible(); //Falla
+                await expect.soft(page.getByText('Hamburguesa 🍔'), 'No se encontró el elemento Hamburguesa 🍔').toBeVisible();
+                await expect.soft(page.getByText('Pasta 🍝'), 'No se encontró el elemento Pasta 🍝').toBeVisible();
+                await expect.soft(page.getByText('Heladoea 🍧'), 'No se encontró el elemento Helado 🍧').toBeVisible();//Falla
+                await expect.soft(page.getByText('Torta 🍰'), 'No se encontró el elemento Torta 🍰').toBeVisible();
+            })
+            
+        })
+
+        test('Validando dentro de un pop-up', async ({ page }) => {
+            await test.step('Dado que navego al Sandbox de Automation de Free Range Testers', async () => {
+                await page.goto('');
+            })
+
+            await test.step('Cuando hago click en el boton pop-up', async () => {
+                await page.getByRole('button', {name: 'Mostrar popup' }).click();
+            })
+
+            await test.step('Puedo validar un elemento dentro del popup', async () => {
+                await expect(page.getByText('¿Viste? ¡Apareció un Pop-up!')).toHaveText('¿Viste? ¡Apareció un Pop-up!');
+                await page.getByRole('button', {name: 'Cerrar'}).click();
+            })
+            
+            
+        })
         
         
         
-    })
-    
+    }) 
+
+
 })();
