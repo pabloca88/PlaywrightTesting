@@ -9,7 +9,7 @@ test.beforeAll(async ({ request }) => {
             name: REPO
         }
     });
-    console.log(response);
+    //console.log(response);
     expect(response.ok()).toBeTruthy();
 })
 

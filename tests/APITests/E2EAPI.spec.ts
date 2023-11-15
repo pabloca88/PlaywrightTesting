@@ -15,7 +15,7 @@ test.beforeAll(async ({ playwright }) => {
             'Accept': 'application/vnd.github.v3+json',
             //Agregamos el token de autorizacion de todos los request
             //Acá ponemos el token que generamos en Github
-            'Authorization' : `token ${process.env.API_TOKEN}`,
+            'Authorization' : `token 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`,//`token ${process.env.API_TOKEN}`,
         },
     });
 });
@@ -31,7 +31,7 @@ test('El ultimo issue creado es el primero en la lista', async ({ page }) => {
             "title": "[Feature] Que el framework me planche la ropa",
         }
     });
-    console.log(newIssue);
+    //console.log(newIssue);
     expect(newIssue.ok()).toBeTruthy();
 
     await page.goto(`https://github.com/${USER}/${REPO}/issues`);

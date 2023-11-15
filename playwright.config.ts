@@ -28,6 +28,7 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on',
+    video: 'retain-on-failure',
   },
 
   /* Configure projects for major browsers */
@@ -63,7 +64,7 @@ export default defineConfig({
         baseURL: 'https://api.github.com',
         extraHTTPHeaders: { 
           'Accept': 'application/vnd.github.v3+json',
-          'Authorization' : `token ${process.env.API_TOKEN}`,
+          'Authorization' : `token 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`, //${process.env.API_TOKEN}
         }
      }
     },
