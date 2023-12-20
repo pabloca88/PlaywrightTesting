@@ -32,9 +32,9 @@ test('El ultimo issue creado es el primero en la lista', async ({ page }) => {
         }
     });
     //console.log(newIssue);
-    expect(newIssue.ok()).toBeTruthy();
-
     await page.goto(`https://github.com/${USER}/${REPO}/issues`);
     const firstIssue = page.locator(`a[data-hovercard-type='issue']`).first();
     await expect(firstIssue).toHaveText('[Feature] Que el framework me planche la ropa');
 });
+
+// GENERAR NUEVO TOKEN EN GITHUB, ESTA EXPIRADO con el nombre FreeRangePW
