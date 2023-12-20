@@ -15,7 +15,7 @@ test.beforeAll(async ({ playwright }) => {
             'Accept': 'application/vnd.github.v3+json',
             //Agregamos el token de autorizacion de todos los request
             //Acá ponemos el token que generamos en Github
-            'Authorization' : `token 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`,//`token ${process.env.API_TOKEN}`,
+            'Authorization' : `token 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`,//`token ${process.env.API_TOKEN}`,
         },
     });
 });
